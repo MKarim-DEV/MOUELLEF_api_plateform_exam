@@ -5,16 +5,22 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\QuestionRepository;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
 #[ApiResource]
-#[Get (security: "is_granted('PUBLIC_ACCESS')")]
-#[Post (security: "is_granted('ROLE_USER')")]
+#[Get]
+#[GetCollection]
+#[Patch]
+#[Post(security: "is_granted('ROLE_USER')")]
 #[Put(security: "is_granted('ROLE_ADMIN')")]
 #[Delete(security: "is_granted('ROLE_ADMIN')")]
 
@@ -26,13 +32,15 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?int $score = null;
+    private int $score = 0;
 
     public function getId(): ?int
     {
